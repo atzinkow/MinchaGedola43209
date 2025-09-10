@@ -1,3 +1,5 @@
+import os
+os.makedirs('docs', exist_ok=True)
 import requests
 from datetime import datetime, timedelta
 from ics import Calendar, Event
