@@ -26,6 +26,9 @@ jobs:
       - name: Generate ICS
         run: python generate_mincha_gedola_ics.py
 
+        - name: Checkout
+          uses: actions/checkout@v4
+
       - name: Commit and push if changed
         run: |
           git config --global user.name 'github-actions[bot]'
