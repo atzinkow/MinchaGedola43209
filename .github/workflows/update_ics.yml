@@ -1,0 +1,32 @@
+name: Update Mincha Gedola Calendar
+
+on:
+  schedule:
+    - cron: '0 4 * * *' # Runs daily at 4:00 UTC
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate ICS
+        run: python generate_mincha_gedola_ics.py
+
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add docs/mincha_gedola.ics
+          git commit -m 'Update Mincha Gedola .ics file' || exit 0
+          git push
