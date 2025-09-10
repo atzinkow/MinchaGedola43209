@@ -31,5 +31,7 @@ while curr <= end_date:
         print(f"Error on {curr.date()}: {e}")
     curr += timedelta(days=1)
 
+import os
+os.makedirs('docs', exist_ok=True)
 with open('docs/mincha_gedola.ics', 'w') as f:
     f.writelines(cal)
