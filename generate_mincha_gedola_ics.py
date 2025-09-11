@@ -8,16 +8,13 @@ LON = -82.9391
 YEAR = datetime.now().year
 
 def get_mincha_gedola(date):
-    url = f"https://www.myzmanim.com/day.aspx?cfg=json&lat={LAT}&lng={LON}&date={date.strftime('%Y-%m-%d')}"
+    url = f"https://www.hebcal.com/zmanim?cfg=json&latitude={LAT}&longitude={LON}&date={date.strftime('%Y-%m-%d')}"
     resp = requests.get(url)
     if resp.status_code != 200:
         raise Exception(f"Failed to fetch data for {date.strftime('%Y-%m-%d')}: {resp.status_code}")
-    try:
-        data = resp.json()
-    except Exception as e:
-        print(f"Response for {date.strftime('%Y-%m-%d')} was not valid JSON: {resp.text}")
-        raise
-    return data['times']['MinchaGedola']
+    data = resp.json()
+    # Returns something like "2025-01-01T12:34:00-05:00"
+    return data['times']['minchaGedola']
 
 cal = Calendar()
 start_date = datetime(YEAR, 1, 1)
