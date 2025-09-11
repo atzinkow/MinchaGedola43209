@@ -24,6 +24,7 @@ end_date = datetime(YEAR, 12, 31)
 
 curr = start_date
 while curr <= end_date:
+    print(f"Processing {curr.date()}")
     try:
         mg_time = get_mincha_gedola(curr)
         dt = datetime.fromisoformat(mg_time)
