@@ -1,3 +1,4 @@
+import os
 import requests
 from datetime import datetime, timedelta
 from ics import Calendar, Event
@@ -27,6 +28,7 @@ while curr <= end_date:
     print(f"Processing {curr.date()}")
     try:
         mg_time = get_mincha_gedola(curr)
+        print(f"Fetched Mincha Gedola time: {mg_time}")
         dt = datetime.fromisoformat(mg_time)
         event = Event()
         event.name = "Mincha Gedola"
@@ -34,11 +36,11 @@ while curr <= end_date:
         event.duration = timedelta(minutes=10)
         event.description = "Earliest time for Mincha today"
         cal.events.add(event)
+        print(f"Added event for {curr.date()}")
     except Exception as e:
         print(f"Error on {curr.date()}: {e}")
     curr += timedelta(days=1)
 
-import os
 os.makedirs('docs', exist_ok=True)
 with open('docs/mincha_gedola.ics', 'w') as f:
-    f.writelines(cal)
+    f.write(str(cal))
