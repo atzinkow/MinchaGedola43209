@@ -7,24 +7,28 @@ LAT = 39.9681
 LON = -82.9391
 YEAR = datetime.now().year
 
-def get_mincha_gedola(date):
+def get_mincha_gedola(date, session=None):
     url = f"https://www.hebcal.com/zmanim?cfg=json&latitude={LAT}&longitude={LON}&date={date.strftime('%Y-%m-%d')}"
-    resp = requests.get(url)
+    resp = (session or requests).get(url)
     if resp.status_code != 200:
         raise Exception(f"Failed to fetch data for {date.strftime('%Y-%m-%d')}: {resp.status_code}")
     data = resp.json()
-    # Returns something like "2025-01-01T12:34:00-05:00"
-    return data['times']['minchaGedola']
+    mg = data['times'].get('minchaGedola')
+    if not mg:
+        raise Exception(f"No Mincha Gedola time for {date.strftime('%Y-%m-%d')}")
+    return mg
 
 cal = Calendar()
 start_date = datetime(YEAR, 1, 1)
 end_date = datetime(YEAR, 12, 31)
 
+session = requests.Session()
+
 curr = start_date
 while curr <= end_date:
     print(f"Processing {curr.date()}")
     try:
-        mg_time = get_mincha_gedola(curr)
+        mg_time = get_mincha_gedola(curr, session=session)
         print(f"Fetched Mincha Gedola time: {mg_time}")
         dt = datetime.fromisoformat(mg_time)
         event = Event()
